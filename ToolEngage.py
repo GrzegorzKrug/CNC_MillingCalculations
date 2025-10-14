@@ -305,25 +305,27 @@ def PlotToolContact(FLUTES=2, ENGAGE=0.5, DEPTH=3, DoPlot=True, resolution=1):
 
     if DoPlot:
         plt.subplot(2, 2, 1)
-        plt.title(
-            f"Polaczone ciecie. Climb. Diff: {DIFF_CLIMB:>3.3f}. RampIn: {GAP[0]:>3.3f}, Top: {GAP[1]:>3.3f}")
+        plt.title(f"Integrated cut. Climb. Diff: {DIFF_CLIMB:>3.3f}")
         format()
+        plt.ylabel("Contact [mm]")
+
         plt.subplot(2, 2, 3)
         format()
-        plt.title(f"Pojedyncze ciecie. Climb")
+        plt.title(f"Single cut. Climb")
+        plt.ylabel("Contact [mm]")
 
         plt.subplot(2, 2, 2)
         format()
-        plt.title(f"Polaczone ciecie. Konwentionalne. Diff: {DIFF_KONW:>3.3f}")
+        plt.title(f"Integrated cut. Conventional. Diff: {DIFF_KONW:>3.3f}")
         plt.subplot(2, 2, 4)
         format()
-        plt.title(f"Pojedyncze ciecie. Konwencjonalne")
+        plt.title(f"Single cut. Conventional")
         custom_lines = [
-            Line2D([0], [0], color='red', lw=2, linestyle='-', label='Pierwszy kontakt'),
-            Line2D([0], [0], color='red', lw=2, linestyle='--', label='Ostatni kontakt'),
+            Line2D([0], [0], color='red', lw=2, linestyle='-', label='First contact'),
+            Line2D([0], [0], color='red', lw=2, linestyle='--', label='Last contact'),
         ]
         plt.suptitle(
-            f"{FLUTES} ostrza, Engage: {ENGAGE*100:>4.1f}%, Głebokość: {DEPTH}mm z {CYCLE_DEPTH}mm")
+            f"{FLUTES} blades, Engage: {ENGAGE*100:>4.1f}%, Depth: {DEPTH}mm of {CYCLE_DEPTH}mm")
         plt.xlabel("Degrees")
         plt.xticks(np.arange(0, ROTATION[-1] + 5, 90), rotation=30,)
         plt.legend(handles=custom_lines, loc='upper right')
@@ -518,8 +520,8 @@ if __name__ == "__main__":
     # PlotToolContact(2, 0.3, 2)
     # PlotToolContact(2, 0.5, 4.8)
     # PlotToolContact(2, 0.3, 2)
-    # PlotToolContact(2, 0.3, 8)
+    PlotToolContact(3, 0.3, 5)
     # PlotToolContact(2, 1, 2)
-    # plt.show()
+    plt.show()
     # renderPlots()
-    compare()
+    # compare()

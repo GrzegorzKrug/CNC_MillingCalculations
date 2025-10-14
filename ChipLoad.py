@@ -35,7 +35,7 @@ if __name__ == "__main__":
     # usedCmap = get_cmap('terrain')
     usedCmap = get_cmap('nipy_spectral')
 
-    plt.figure(figsize=(12,8), dpi=120)
+    plt.figure(figsize=(12, 8), dpi=120)
 
     def makeChipLoadPLot(F, R, blades, ColorSteps, style='solid', barAX=None):
         """"""

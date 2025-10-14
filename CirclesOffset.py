@@ -174,7 +174,7 @@ def findCutDistance(wRad, radius, Chip):
     # P1x = (P1y - b) / a
     P1x, P1y = solve(radius, Chip, a, b, wRad=wRad)
     plt.plot([P0x, P1x], [P0y, P1y], color='gray', alpha=0.2)
-    P1x, P1y = solve(radius, Chip, a, b, originX=P1x)
+    # P1x, P1y = solve(radius, Chip, a, b, originX=P1x)
     plt.scatter(P1x, P1y)
     # plt.plot([P0x, P1x], [P0y, P1y], color='green', alpha=0.2)
 
@@ -222,34 +222,55 @@ if __name__ == "__main__":
     x = np.cos(wRad) * Radius
     # y = np.sin(wRad) * Radius + np.sin(np.pi / 2 - wRad) * Chip
     y = np.sin(wRad) * Radius + np.cos(wRad) * Chip
-    plt.plot(x, y)
-    plt.plot(x, y - Chip, color="cyan")
+    plt.figure(figsize=(10, 7))
+    plt.plot(x, y - Chip, color="green", label="Initial Cut")
+    plt.plot(x, y, label="Next cut")
 
     wDeg = 60
     wRad = np.deg2rad(wDeg)
     XDeg = np.linspace(-90, 90, 50)
     # X = np.array([0], dtype=float)
+
     Y = XDeg * 0
     for wi, w in enumerate(XDeg):
         wRad = np.deg2rad(w)
         dist = findCutDistance(wRad, Radius, Chip)
         Y[wi] = dist
 
-    plt.close("all")
+    XRad = np.deg2rad(XDeg)
+    tempY = np.cos(XRad) * Radius
+    tempX = np.sin(XRad) * Radius
+    plt.plot(tempX, tempY, label="Stationary circle (for reference)", color='black', alpha=0.7)
+    plt.plot(
+        [0, 0], [-Chip, Chip], label="ChipLoad per 1 blade (rotation of: 360°/blades)",
+        linewidth=3, color='red'
+    )
+    # plt.plot(XDeg / 90 * Radius, tempY + Chip, label="Cos function", alpha=0.7)
+
+    plt.grid(True)
+    plt.legend()
+    plt.title("Cutting comparison")
+    plt.xlabel("Y Distance")
+    plt.ylabel("X Distance")
+    plt.tight_layout()
+    # plt.show()
+
+    ""
+    # plt.close("all")
     plt.figure()
     Y = moving_average(Y, 5, "keep")
     plt.plot(XDeg, Y, label="Moving cutters approximation", color='green', linewidth=3)
 
     XRad = np.deg2rad(XDeg)
     tempY = np.cos(XRad)  # + np.sin(XRad) * Chip
-    plt.plot(XDeg, tempY, label="Cos function", alpha=0.3)
+    plt.plot(XDeg, tempY, color='blue', label="Cos function", alpha=0.5)
     up = 0.05
     center = 0.05
     up = np.tan(Chip / Radius) / 2
     center = -np.tan(Radius / Chip) / 16 / 1.5
 
     shifted = cosShifted(XDeg / 90, up, center) * Chip
-    plt.plot(XDeg, shifted, label="Shifted", color='red')
+    # plt.plot(XDeg, shifted, label="Shifted", color='red')
     diff = tempY - Y
     plt.grid(True)
     # aprox = np.cos(XRad) + sigmoid(X / 90) / 10
@@ -269,5 +290,7 @@ if __name__ == "__main__":
     # plt.close("all")
 
     plt.grid(True)
+    plt.title("Model engagement comparison")
+    plt.xlabel("Degrees")
     plt.tight_layout()
     plt.show()
