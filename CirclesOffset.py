@@ -186,7 +186,9 @@ def findCutDistance(wRad, radius, Chip):
     P1x, P1y = solve(radius, Chip, a, b, originX=P1x)
 
     plt.scatter(P1x, P1y, color='lightgreen')
-    plt.plot([P1x, P2x], [P1y, P2y], color='orange', alpha=0.8, linewidth=3)
+    # CutDeg =
+    color = "orange" if np.rad2deg(wRad) > -95.8 else "purple"
+    plt.plot([P1x, P2x], [P1y, P2y], color=color, alpha=0.8, linewidth=3)
 
     dist = np.sqrt(np.pow(P1x - P2x, 2) + np.pow(P1y - P2y, 2))
     return dist
@@ -217,14 +219,6 @@ if __name__ == "__main__":
     ChipRev = 2
     Chip = ChipRev / Flute
 
-    x = np.cos(wRad) * Radius
-    y = np.sin(wRad) * Radius
-    # plt.plot(x, y, color='black')
-
-    x = np.cos(wRad) * Radius
-    y = np.sin(wRad) * Radius
-    # plt.plot(x, y + Chip, color='black')
-
     wDeg = np.linspace(0, 180, 50)
     wRad = np.deg2rad(wDeg)
 
@@ -238,14 +232,14 @@ if __name__ == "__main__":
 
     wDeg = 60
     wRad = np.deg2rad(wDeg)
-    XDeg = np.linspace(-90, 90, 50)
-    # X = np.array([0], dtype=float)
+    XDeg = np.linspace(-90, 90, 70)
+    # XDeg = np.linspace(-115, -90, 40)  # Rubbing angle is changing
 
-    Y = XDeg * 0
+    EngageY = XDeg * 0
     for wi, w in enumerate(XDeg):
         wRad = np.deg2rad(w)
         dist = findCutDistance(wRad, Radius, Chip)
-        Y[wi] = dist
+        EngageY[wi] = dist
 
     XRad = np.deg2rad(XDeg)
     tempY = np.cos(XRad) * Radius
@@ -277,8 +271,16 @@ if __name__ == "__main__":
     ""
     # plt.close("all")
     plt.figure()
+    diff = EngageY - np.cos(XRad) * Chip
+    plt.plot(XDeg, diff, label="Amplified value in real model")
+    plt.title("Difference between 'Cos' model and real model.")
+    plt.legend()
+    plt.grid()
+    plt.tight_layout()
+
+    plt.figure()
     # Y = moving_average(Y, 5, "keep")
-    plt.plot(XDeg, Y, label="Moving cutter approximation", color='green', linewidth=3)
+    plt.plot(XDeg, EngageY, label="Moving cutter approximation", color='green', linewidth=3)
 
     XRad = np.deg2rad(XDeg)
     tempY = np.cos(XRad) * Chip  # + np.sin(XRad) * Chip
@@ -290,7 +292,7 @@ if __name__ == "__main__":
 
     shifted = cosShifted(XDeg / 90, up, center) * Chip
     # plt.plot(XDeg, shifted, label="Shifted", color='red')
-    diff = tempY - Y
+    diff = tempY - EngageY
     plt.grid(True)
     # aprox = np.cos(XRad) + sigmoid(X / 90) / 10
 

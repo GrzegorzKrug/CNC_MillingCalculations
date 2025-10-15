@@ -21,11 +21,12 @@ Wood thicknes is distance between P1 and P2.
 P1 is determined by intersection of line beween P2 and P0
 -   P0 is center of spindle (moving point)
 
-#### Real model is shown on picture below
+### Real model is shown on picture below
 
-*Analysis shows that cutter goes above value of 1 for angle <5, 10>*
 
 ![Model of engagement](images/ModelOfEngagement.png)
+
+*Analysis shows that cutter goes above value of 1 for angle <5, 10>*
 
 * Degrees **<-90, 0>** show **Conventional** cutting
 * Degrees **<0, 90>** show **Climb** cutting 
@@ -58,6 +59,8 @@ This is not really a force, it just shows how much resistance (wood) is opposing
 `Y axis` can be treated as height fraction of full cycle depth.
 Cycle depth of cutter is measured for 1 blade. It means how high is same blade after rotating it by 360° (Height change per revolution).
 
+You can use this for any model, treat values as 0-80%
+
 #### 2 Blades
 ![Force difference (vibrations)](images/PseudoWibracje_2_.png)
 
@@ -82,3 +85,13 @@ Blue colors means work conditions are more stable! This should increase life of 
 - 3 blades: 33% or 66%
 
 Keep in mind bigger engage increased load on spindle.
+
+## Extra plot of rubbing
+New cut angle is changing based on chipload and radius!
+
+But distance is always the same, exactly **50%** of chipload for any blade number.
+
+Rubbing is chipload dependent.
+For smaller chiploads there is not enough material to cut.
+
+![Rubbing example](images/RubbingExample.png)
