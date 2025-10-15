@@ -27,8 +27,8 @@ P1 is determined by intersection of line beween P2 and P0
 
 ![Model of engagement](images/ModelOfEngagement.png)
 
-* Degrees <0, 90> show Climb cutting 
-* Degrees <-90, 0> show Conventional cutting
+* Degrees **<-90, 0>** show **Conventional** cutting
+* Degrees **<0, 90>** show **Climb** cutting 
 
 This model is dependent on radius and chip size. Modeling this with trygonometry functions is not trival.
 
@@ -44,20 +44,28 @@ Plot of single blade touching material at start and end. Graph shows also integr
 
 ![Contatc distance](images/CycleEngagmentPlot.png)
 
-This plot can be interpreted as "wood resistance" for cutting cycle. We can extract values like magnitude and difference between max and minimum "resistance". Combined plot are shown in next section.
+This plot can be interpreted as "wood resistance" for cutting cycle. We can extract values like magnitude and difference between maximum and minimum "resistance".
+
+Plots showing values for different parameters are shown in next section.
 
 # Force differences for helix cutter
 This is not really a force, it just shows how much resistance (wood) is opposing the cutter.
 
-![Force difference (vibrations)](images/PseudoWibracje_2_.png)
-Left graph is difference between minimal force and maximum force in whole cycle. Minimal values indicate constant resitance without change.
+* Left graph is difference between minimal and maximum force in cycle. Minimal values indicate constant resitance without change.
+* Right graph shows force magnitude.
 
-Right graph shows force magnitude.
-
-## Side note
+### Side note
 `Y axis` can be treated as height fraction of full cycle depth.
+Cycle depth of cutter is measured for 1 blade. It means how high is same blade after rotating it by 360° (Height change per revolution).
 
-Max depth distance is measured for 1 blade. It means how high is same blade after rotating it by 360°. Height change per revolution.
+#### 2 Blades
+![Force difference (vibrations)](images/PseudoWibracje_2_.png)
+
+#### 3 Blades
+![Force difference (vibrations)](images/PseudoWibracje_3_.png)
+
+#### 4 Blades
+![Force difference (vibrations)](images/PseudoWibracje_4_.png)
 
 
 ## Results of steady work
