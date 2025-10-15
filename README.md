@@ -86,12 +86,19 @@ Blue colors means work conditions are more stable! This should increase life of 
 
 Keep in mind bigger engage increased load on spindle.
 
-## Extra plot of rubbing
+
+## Extra section with intercuting width
+### Rubbing for small chiploads
 New cut angle is changing based on chipload and radius!
 
 But distance is always the same, exactly **50%** of chipload for any blade number.
 
-Rubbing is chipload dependent.
 For smaller chiploads there is not enough material to cut.
 
 ![Rubbing example](images/RubbingExample.png)
+
+Width of rubbing can be calculated using given formula:
+
+$$W_r = Radius - \sqrt{Radius^2 - \left(\frac{Chipload}{2}\right)^2}$$
+
+![Rubbing plot](images/RubHeight.png)

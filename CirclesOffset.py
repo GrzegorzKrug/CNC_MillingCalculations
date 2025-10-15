@@ -254,6 +254,14 @@ if __name__ == "__main__":
         [0, 0], [-Chip, 0], label="ChipLoad per 1 blade ( 180° )",
         linewidth=3, color='red', alpha=0.8
     )
+    print(Radius, Chip)
+    RubWidth = Radius - np.sqrt(np.pow(Radius, 2) - np.pow(Chip / 2, 2))
+    print("Rub Width:", RubWidth)
+    # plt.plot(
+    # [-Radius, -Radius + RubWidth], [-Chip * 1.5, -Chip * 1.5],
+    # color='Cyan', linewidth=3, label='Rub Width'
+    # )
+
     # plt.plot(XDeg / 90 * Radius, tempY + Chip, label="Cos function", alpha=0.7)
     handles, labels = plt.gca().get_legend_handles_labels()
     newLine = Line2D([0, 0], [0, 1], color='orange', alpha=1, linewidth=3)
@@ -280,7 +288,7 @@ if __name__ == "__main__":
 
     plt.figure()
     # Y = moving_average(Y, 5, "keep")
-    plt.plot(XDeg, EngageY, label="Moving cutter approximation", color='green', linewidth=3)
+    plt.plot(XDeg, EngageY, label="Moving cutter model", color='green', linewidth=3)
 
     XRad = np.deg2rad(XDeg)
     tempY = np.cos(XRad) * Chip  # + np.sin(XRad) * Chip
