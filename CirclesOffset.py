@@ -106,11 +106,13 @@ def CompareCirlceCost():
 
 def solve(r, ch, a, b, *, STEP=0.001, originX=None, wRad=None):
     if originX is None:
-        minR = np.sin(wRad - np.deg2rad(10)) * r
-        X = np.arange(minR, r + 0.001, STEP, dtype=np.double)
+        initR = np.sin(wRad) * r
+        first = np.clip(initR - 2 / r, -r, r)
+        end = np.clip(initR + 2 / r, -r, r)
+        X = np.arange(first, end, STEP, dtype=np.double)
     else:
         # print(f"Origin: {originX}")
-        X = np.linspace(originX - 2, originX + 2, 10000, dtype=np.double)
+        X = np.linspace(originX - r / 4.5, originX + r / 4.5, 20000, dtype=np.double)
         # X = np.linspace(originX - 1, originX +1, 200)
     # x2 = np.linspace(-90, 90, NUM)
     y1 = a * X + b
@@ -123,7 +125,10 @@ def solve(r, ch, a, b, *, STEP=0.001, originX=None, wRad=None):
 
     # x2 = np.sin(wRad) * r
     # wRad = np.arcsin(wRad)
-    y2 = np.cos(wRad) * r + np.sin(wRad) * ch - ch
+    Line1y = np.cos(wRad) * r + np.sin(wRad) * (ch / 2) - ch / 2 - ch
+    # y2 = np.cos(wRad) * r + np.sin(wRad) * ch - ch / 2
+    y2 = Line1y
+    # plt.scatter(wDeg / 90 * Radius, y2)
     diff = np.abs(y2 - y1).astype(float)
     diff[np.isnan(diff)] = r
     # plt.plot(wDeg)
@@ -145,13 +150,17 @@ def solve(r, ch, a, b, *, STEP=0.001, originX=None, wRad=None):
 
 
 def findCutDistance(wRad, radius, Chip):
-    "P2 is Above"
+    """"""
+    "P1 is previous cut"
+    "P2 is current cut"
     P2x = np.sin(wRad) * radius
-    P2y = np.cos(wRad) * radius + np.sin(wRad) * Chip
+    P2y = np.cos(wRad) * radius + np.sin(wRad) * (Chip / 2) - Chip / 2
+    # plt.scatter(P2x, P2y)
 
     "P0 is moving center"
     P0x = wRad * 0
-    P0y = np.sin(wRad) * Chip
+    # P0y = np.sin(wRad) * Chip / 2 - Chip / 2
+    P0y = (np.sin(wRad) - 1) * Chip / 2
     # plt.scatter(P0x, P0y)
     # plt.scatter(P2x, P2y)
     # plt.plot([P0x, P2x], [P0y, P2y], color='gray', alpha=0.5)
@@ -174,9 +183,10 @@ def findCutDistance(wRad, radius, Chip):
     # P1x = (P1y - b) / a
     P1x, P1y = solve(radius, Chip, a, b, wRad=wRad)
     plt.plot([P0x, P1x], [P0y, P1y], color='gray', alpha=0.2)
-    # P1x, P1y = solve(radius, Chip, a, b, originX=P1x)
-    plt.scatter(P1x, P1y)
-    # plt.plot([P0x, P1x], [P0y, P1y], color='green', alpha=0.2)
+    P1x, P1y = solve(radius, Chip, a, b, originX=P1x)
+
+    plt.scatter(P1x, P1y, color='lightgreen')
+    plt.plot([P1x, P2x], [P1y, P2y], color='orange', alpha=0.8, linewidth=3)
 
     dist = np.sqrt(np.pow(P1x - P2x, 2) + np.pow(P1y - P2y, 2))
     return dist
@@ -221,10 +231,10 @@ if __name__ == "__main__":
     "P1 Under"
     x = np.cos(wRad) * Radius
     # y = np.sin(wRad) * Radius + np.sin(np.pi / 2 - wRad) * Chip
-    y = np.sin(wRad) * Radius + np.cos(wRad) * Chip
+    y = np.sin(wRad) * Radius + np.cos(wRad) * (Chip / 2) - Chip / 2
     plt.figure(figsize=(10, 7))
-    plt.plot(x, y - Chip, color="green", label="Initial Cut")
-    plt.plot(x, y, label="Next cut")
+    plt.plot(x, y - Chip, color="green", label="Previous cut")
+    plt.plot(x, y, label="Current cut", color='blue', linewidth=2)
 
     wDeg = 60
     wRad = np.deg2rad(wDeg)
@@ -240,16 +250,25 @@ if __name__ == "__main__":
     XRad = np.deg2rad(XDeg)
     tempY = np.cos(XRad) * Radius
     tempX = np.sin(XRad) * Radius
-    plt.plot(tempX, tempY, label="Stationary circle (for reference)", color='black', alpha=0.7)
     plt.plot(
-        [0, 0], [-Chip, Chip], label="ChipLoad per 1 blade (rotation of: 360°/blades)",
-        linewidth=3, color='red'
+        tempX, tempY, color='black', alpha=0.5, dashes=[5, 3],
+        label="Stationary circles (for reference)"
+    )
+    plt.plot(tempX, tempY - Chip, color='black', alpha=0.5, dashes=[5, 3])
+    plt.plot(tempX, tempY - 2 * Chip, color='black', alpha=0.5, dashes=[5, 3])
+    plt.plot(
+        [0, 0], [-Chip, 0], label="ChipLoad per 1 blade ( 180° )",
+        linewidth=3, color='red', alpha=0.8
     )
     # plt.plot(XDeg / 90 * Radius, tempY + Chip, label="Cos function", alpha=0.7)
+    handles, labels = plt.gca().get_legend_handles_labels()
+    newLine = Line2D([0, 0], [0, 1], color='orange', alpha=1, linewidth=3)
+    handles.append(newLine)
+    labels.append("Wood thickness")
 
     plt.grid(True)
-    plt.legend()
-    plt.title("Cutting comparison")
+    plt.legend(handles=handles, labels=labels, loc='lower right')
+    plt.title(f"Cutting comparison, Radius: {Radius}, Chipload: {Chip:<2.2f}")
     plt.xlabel("Y Distance")
     plt.ylabel("X Distance")
     plt.tight_layout()
@@ -258,11 +277,11 @@ if __name__ == "__main__":
     ""
     # plt.close("all")
     plt.figure()
-    Y = moving_average(Y, 5, "keep")
-    plt.plot(XDeg, Y, label="Moving cutters approximation", color='green', linewidth=3)
+    # Y = moving_average(Y, 5, "keep")
+    plt.plot(XDeg, Y, label="Moving cutter approximation", color='green', linewidth=3)
 
     XRad = np.deg2rad(XDeg)
-    tempY = np.cos(XRad)  # + np.sin(XRad) * Chip
+    tempY = np.cos(XRad) * Chip  # + np.sin(XRad) * Chip
     plt.plot(XDeg, tempY, color='blue', label="Cos function", alpha=0.5)
     up = 0.05
     center = 0.05
@@ -290,7 +309,7 @@ if __name__ == "__main__":
     # plt.close("all")
 
     plt.grid(True)
-    plt.title("Model engagement comparison")
+    plt.title(f"Model engagement comparison. Chipload: {Chip:<2.2f}")
     plt.xlabel("Degrees")
     plt.tight_layout()
     plt.show()
