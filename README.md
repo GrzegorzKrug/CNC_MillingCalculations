@@ -5,20 +5,30 @@ This project assumes to use Helix cutter with <2, 4> blades.
 ![Engagment surface](Cutter.gif)
 
 # Real engagment
-Tool angagement is not stationary, its constantly moving forward. This graph shows where blade is touching wood piece 
+Tool angagement is not stationary, its constantly moving forward. This graph shows where blade is touching wood piece.
 
-![Tool move in space](images/CuttingComparison.png)
+*Below you can see graph for blade touching wood in time.*
 
-Model of wood thickness width between 2cuts.
+**Spindle is rotating clockwise.**
+
+![Blade position in space](images/CuttingComparison.png)
+
+*Model of wood thickness between 2 consecutive cuts.*
+
 Wood thicknes is distance between P1 and P2.
 -    P2 is point on cut for given cutter roation angle `w`
 -    P1 is point on previous cut.
 P1 is determined by intersection of line beween P2 and P0
 -   P0 is center of spindle (moving point)
 
-Real model is shown on picture below
+#### Real model is shown on picture below
+
+*Analysis shows that cutter goes above value of 1 for angle <5, 10>*
 
 ![Model of engagement](images/ModelOfEngagement.png)
+
+* Degrees <0, 90> show Climb cutting 
+* Degrees <-90, 0> show Conventional cutting
 
 This model is dependent on radius and chip size. Modeling this with trygonometry functions is not trival.
 
@@ -31,14 +41,16 @@ This effect occurs when chip size is big, we can spot not smooth surface that ha
 # Simplified calculations
 
 Plot of single blade touching material at start and end. Graph shows also integrated version (sum like) of contact distance. Script `ToolEngage.py` can be run for other values too.
+
 ![Contatc distance](images/CycleEngagmentPlot.png)
 
+This plot can be interpreted as "wood resistance" for cutting cycle. We can extract values like magnitude and difference between max and minimum "resistance". Combined plot are shown in next section.
 
-# Force differences
-This is not really a force, just how much resistance (wood) is opposing the cutter.
+# Force differences for helix cutter
+This is not really a force, it just shows how much resistance (wood) is opposing the cutter.
 
 ![Force difference (vibrations)](images/PseudoWibracje_2_.png)
-Left graph is difference between minimal force and maximum force in whole cycle.
+Left graph is difference between minimal force and maximum force in whole cycle. Minimal values indicate constant resitance without change.
 
 Right graph shows force magnitude.
 
