@@ -1,4 +1,4 @@
-# CNC Milling tool engagment
+# CNC Milling tool engagement
 During milling cutter spins and moves forward.
 This project assumes to use Helix cutter with <2, 4> blades.
 
