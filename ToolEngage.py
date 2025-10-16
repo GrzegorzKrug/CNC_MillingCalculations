@@ -229,7 +229,7 @@ def detect_ramp_and_stable(signal, time=None, tolerance=0.03, min_stable_duratio
     return rampLen / len(signal), stableLen / len(signal), decayLen / len(signal)
 
 
-@measure_real_time_decorator
+# @measure_real_time_decorator
 def PlotToolContact(FLUTES=2, ENGAGE=0.5, DEPTH=3, DoPlot=True, resolution=1):
     ROTATION = np.arange(-90, 180 * 2 + 30, resolution, dtype=float)
     # DEPTH = np.linspace(2, 6, 300)
@@ -262,7 +262,8 @@ def PlotToolContact(FLUTES=2, ENGAGE=0.5, DEPTH=3, DoPlot=True, resolution=1):
         combinedForces = moving_average(combinedForces, AVG_N)
     SCOPE = combinedForces[SELECTION_MASK]
     MAX_FORCE = SCOPE.max()
-    GAP = detect_ramp_and_stable(SCOPE)
+    # GAP = detect_ramp_and_stable(SCOPE)
+    GAP = [0, 0, 0]
     DIFF_CLIMB = SCOPE.max() - SCOPE.min()
     if DoPlot:
         plt.plot(ROTATION, combinedForces)
@@ -410,12 +411,14 @@ def renderPlots():
 
 
 def compare():
-    ENGAGE = np.arange(0.1, 1.01, 0.025)
-    DEPTH = np.arange(0, 8.01, 0.2)
+    ENGAGE = np.arange(0.1, 1.01, 0.01)
+    ENGAGE = np.arange(0.1, 1.01, 0.02)
     # ENGAGE = np.arange(0.1, 1.01, 0.05)
-    # DEPTH = np.arange(0, 8.01, 0.25)
-    # ENGAGE = np.arange(0.1, 1.01, 0.25)
-    # DEPTH = np.arange(0, 8.01, 1)
+    # ENGAGE = np.arange(0.1, 1.01, 0.1)
+    DEPTH = np.arange(0, 10.01, 0.1)
+    DEPTH = np.arange(0, 10.01, 0.2)
+    # DEPTH = np.arange(0, 10.01, 0.25)
+    # DEPTH = np.arange(0, 10.01, 1)
 
     XX, YY = np.meshgrid(ENGAGE, DEPTH)
     RESDIFF = XX * 0
@@ -425,11 +428,14 @@ def compare():
     VIBR = XX * 0
     ContactSum = XX * 0
 
-    for fl in [2, 3, 4]:
-        plt.figure(figsize=(12, 7), dpi=150)
+    for fl in [2, 3, 4, 5, 6]:
+        DPI = 200
+        SIZE = (12, 8)
+        plt.figure(figsize=SIZE, dpi=DPI)
+
         for di, dep in enumerate(DEPTH):
             for ei, eng in enumerate(ENGAGE):
-                diffClimb, forceCLimb, hillSize = PlotToolContact(fl, eng, dep, False, resolution=1)
+                diffClimb, forceCLimb, hillSize = PlotToolContact(fl, eng, dep, False, resolution=0.5)
                 RESDIFF[di, ei] = diffClimb
                 RESFORCE[di, ei] = forceCLimb
                 RAMPIN[di, ei] = hillSize[0]
@@ -442,14 +448,14 @@ def compare():
         plt.ylabel("Depth")
         plt.xlabel("Engage")
         plt.grid(True)
-        plt.title(f"Pseudo wibracje (różnica oporu), Ostrza: {fl}")
+        plt.title(f"Difference between min and max material resistance, blades: {fl}")
         plt.colorbar()
         plt.subplot(1, 2, 2)
         plt.contourf(XX, YY, RESFORCE, cmap="turbo", levels=15)
         # plt.ylabel("Depth")
         plt.xlabel("Engage")
         plt.grid(True)
-        plt.title(f"Opór styku frezu helixowego, Ostrza: {fl}")
+        plt.title(f"Contact resistance of helix cuter, blades: {fl}")
         plt.colorbar()
 
         plt.tight_layout()
@@ -458,7 +464,7 @@ def compare():
         print(f"Saved image: {name}")
         plt.close()
 
-        plt.figure(figsize=(12, 7), dpi=150)
+        plt.figure(figsize=SIZE, dpi=DPI)
         plt.contourf(XX, YY, STABLE, cmap="terrain_r", levels=15)
         plt.xlabel("Engage")
         plt.ylabel("Depth")
@@ -470,13 +476,13 @@ def compare():
         # plt.savefig(name)
         plt.close()
 
-        plt.figure(figsize=(12, 7), dpi=150)
+        plt.figure(figsize=SIZE, dpi=DPI)
         plt.contourf(XX, YY, VIBR, cmap="turbo", levels=15)
         plt.xlabel("Engage")
         plt.ylabel("Depth")
         plt.grid(True)
         plt.colorbar()
-        plt.title(f"Pseudo wibracje skalowane z oporem, Ostrza: {fl}")
+        plt.title(f"Difference scaled with resitance, blades: {fl}")
         contours = plt.contour(XX, YY, VIBR, levels=15, linewidths=1.5, colors="black")
 
         # Add labels on contour lines
@@ -488,7 +494,7 @@ def compare():
         plt.savefig(name)
         plt.close()
 
-        plt.figure(figsize=(12, 8), dpi=150)
+        plt.figure(figsize=SIZE, dpi=DPI)
         plt.subplot(2, 1, 1)
         plt.contourf(XX, YY, RAMPIN, cmap="terrain_r", levels=15)
         plt.xlabel("Engage")
@@ -520,8 +526,10 @@ if __name__ == "__main__":
     # PlotToolContact(2, 0.3, 2)
     # PlotToolContact(2, 0.5, 4.8)
     # PlotToolContact(2, 0.3, 2)
-    PlotToolContact(3, 0.3, 5)
+    PlotToolContact(6, 0.4, 2)
+    PlotToolContact(6, 0.4, 5)
+    # PlotToolContact(6, 0.5, 1)
     # PlotToolContact(2, 1, 2)
     plt.show()
-    # renderPlots()
     # compare()
+    # renderPlots()

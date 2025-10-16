@@ -70,6 +70,12 @@ You can use this for any model, treat values as 0-80%
 #### 4 Blades
 ![Force difference (vibrations)](images/PseudoWibracje_4_.png)
 
+#### 5 Blades
+![Force difference (vibrations)](images/PseudoWibracje_5_.png)
+
+#### 6 Blades
+![Force difference (vibrations)](images/PseudoWibracje_6_.png)
+
 
 ## Results of steady work
 Combined plot, shows how magnitude scales with force differences.
@@ -78,6 +84,8 @@ Blue colors means work conditions are more stable! This should increase life of 
 ![Work conditions 2 blades](images/PseudoWibracje_2_Skalowane.png)
 ![Work conditions 3 blades](images/PseudoWibracje_3_Skalowane.png)
 ![Work conditions 4 blades](images/PseudoWibracje_4_Skalowane.png)
+![Work conditions 5 blades](images/PseudoWibracje_5_Skalowane.png)
+![Work conditions 6 blades](images/PseudoWibracje_6_Skalowane.png)
 
 # Summary
 ### Best engage for end cutters is:
